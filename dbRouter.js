@@ -14,7 +14,7 @@ router.post("/", (req, res) => {
        res.status(400).json({errorMessage: "Please provide title and contents for the post."})   
    } else {
        db 
-        .find(post)
+        .insert(post)
        .then(posted => {
            res.status(201).json(posted)
        })
@@ -25,38 +25,48 @@ router.post("/", (req, res) => {
    }
 })
 
+// Having a hard time getting .post() with ID to work
 // .post() with ID
 router.post("/:id/comments", (req, res) => {
     const { id }  = req.params; 
     if(!id) {
         res.status(404).json({message: "The post with the specified ID does not exist"})
-    } else if(!id) {
-        res.status(400).json({errorMessage: "Please provide text for the comment"})
-    } else {
-
+    } else  {
+        // res.status(400).json({errorMessage: "Please provide text for the comment"})
         db
-        .findById(id)
+        .insert(id)
         .then(created => {
             res.status(201).json(created)
         })
+        
         .catch(error => {
             console.log(error)
             res.status(500).json({error: "There was an error while saving the comment to the database"})
         })
-    }
-})
+    } 
+    })
+    
 
 // .get() 
 router.get("/", (req, res) => {
+    const get = req.body;
     db
-    .insert()
+    .find(get)
     .then(show => {
         res.status(201).json(show)
     })
     .catch(error => {
         console.log(error)
-        res.status(404).json({message: "The post with the specified ID does not exist"})
+        res.status(500).json({message: "The posts information could not be retrieved"})
     })
+})
+
+// .get() ID 
+router.get("/api/posts/:id", (req, res) => {
+    const { id } = req.params; 
+    if(!id) {
+        res.status(404).json({message: "The post with the "})
+    }
 })
 
 module.exports = router; 
