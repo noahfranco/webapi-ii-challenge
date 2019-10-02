@@ -109,6 +109,26 @@ router.put("/:id", (req, res) => {
 // BY COMMENTS
 // *************
 
+// .get() by comments 
+router.get("/:id/comments", (req, res) => {
+    const { id }  = req.params;
+     
+    if(!id) {
+        res.status(404).json({message: "The post with the specified ID does not exist"})
+    } else {
+        db
+        .findPostComments(id)
+        .then(withID => {
+            res.status(201).json(withID)
+        })
+        .catch(error => {
+            console.log(error)
+            res.status(500).json({error: "The post information could not be retrieved"})
+        })
+    }
+})
+
+
  // Having a hard time getting .post() with ID to work
 // .post() with ID
 // router.post("/:id/comments", (req, res) => {
@@ -130,7 +150,6 @@ router.put("/:id", (req, res) => {
 //     } 
 //     })
 
-// .get() by comments 
 
 
 module.exports = router; 
