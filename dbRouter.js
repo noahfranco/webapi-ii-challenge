@@ -27,31 +27,31 @@ router.post("/", (req, res) => {
 
 // Having a hard time getting .post() with ID to work
 // .post() with ID
-router.post("/:id/comments", (req, res) => {
-    const { id }  = req.params; 
-    if(!id) {
-        res.status(404).json({message: "The post with the specified ID does not exist"})
-    } else  {
-        // res.status(400).json({errorMessage: "Please provide text for the comment"})
-        db
-        .insert(id)
-        .then(created => {
-            res.status(201).json(created)
-        })
+// router.post("/:id/comments", (req, res) => {
+//     const { id }  = req.params; 
+//     if(!id) {
+//         res.status(404).json({message: "The post with the specified ID does not exist"})
+//     } else  {
+//         res.status(400).json({errorMessage: "Please provide text for the comment"})
+//         db
+//         .insert(id)
+//         .then(created => {
+//             res.status(201).json(created)
+//         })
         
-        .catch(error => {
-            console.log(error)
-            res.status(500).json({error: "There was an error while saving the comment to the database"})
-        })
-    } 
-    })
+//         .catch(error => {
+//             console.log(error)
+//             res.status(500).json({error: "There was an error while saving the comment to the database"})
+//         })
+//     } 
+//     })
 
 
 // .get() 
 router.get("/", (req, res) => {
-    const get = req.body;
+    
     db
-    .find(get)
+    .find()
     .then(show => {
         res.status(201).json(show)
     })
@@ -63,12 +63,12 @@ router.get("/", (req, res) => {
 
 // .get() ID 
 router.get("/:id", (req, res) => {
-    const { id } = req.params; 
+    const id  = req.params.id; 
     if(!id) {
         res.status(404).json({message: "The post with the specified ID does not exist"})
     } else {
         db
-        .find(id)
+        .findById(id)
         .then(withID => {
             res.status(201).json(withID)
         })
@@ -78,6 +78,8 @@ router.get("/:id", (req, res) => {
         })
     }
 })
+
+// 
 
 
 
