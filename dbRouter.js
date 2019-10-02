@@ -25,7 +25,6 @@ router.post("/", (req, res) => {
    }
 })
 
-
 // .get() 
 router.get("/", (req, res) => {
     
@@ -75,9 +74,60 @@ router.delete("/:id", (req, res) => {
     }
 })
 
+// .put() ID 
+router.put("/:id", (req, res) => {
+    const { id } = req.params; 
+    const title = req.body.title; 
+    const contents = req.body.contents; 
+
+    if(!title && !contents) {
+        res.status(400).json({errorMessage: "Please provide title and contents for the post"})
+    } 
+        db
+        .update(id, {title, contents})
+        .then(upToDate => {
+            if(upToDate) {
+                db.findById(id)
+                .then(post => {
+                    res.status(200).json(post)
+                })
+                .catch(error => {
+                    console.log(error)
+                    res.status(500).json({error: "The post information could not be modified one"})
+            })
+        } else {
+            res.status(404),json({errorMessage: "The post with the specified ID does not exist"})
+        }
+    })
+    .catch(error => {
+        console.log(error)
+        res.status(500).json({error: "The post information could not be modified two"})
+    })
+})
+
 // *************
 // BY COMMENTS
 // *************
+
+// .get() by comments 
+router.get("/:id/comments", (req, res) => {
+    const { id }  = req.params;
+     
+    if(!id) {
+        res.status(404).json({message: "The post with the specified ID does not exist"})
+    } else {
+        db
+        .findPostComments(id)
+        .then(withID => {
+            res.status(201).json(withID)
+        })
+        .catch(error => {
+            console.log(error)
+            res.status(500).json({error: "The post information could not be retrieved"})
+        })
+    }
+})
+
 
  // Having a hard time getting .post() with ID to work
 // .post() with ID
@@ -100,7 +150,6 @@ router.delete("/:id", (req, res) => {
 //     } 
 //     })
 
-// .get() by comments 
 
 
 module.exports = router; 
