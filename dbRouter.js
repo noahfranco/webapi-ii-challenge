@@ -25,7 +25,6 @@ router.post("/", (req, res) => {
    }
 })
 
-
 // .get() 
 router.get("/", (req, res) => {
     
@@ -73,6 +72,11 @@ router.delete("/:id", (req, res) => {
             res.status(500).json({error: "The post could not be removed"})
         })
     }
+})
+
+// .put() ID 
+router.put("/:id", (req, res) => {
+    
 })
 
 // *************
