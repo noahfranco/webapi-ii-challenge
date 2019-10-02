@@ -129,26 +129,36 @@ router.get("/:id/comments", (req, res) => {
 })
 
 
- // Having a hard time getting .post() with ID to work
-// .post() with ID
-// router.post("/:id/comments", (req, res) => {
-//     const { id }  = req.params; 
-//     if(!id) {
-//         res.status(404).json({message: "The post with the specified ID does not exist"})
-//     } else  {
-//         res.status(400).json({errorMessage: "Please provide text for the comment"})
-//         db
-//         .insert(id)
-//         .then(created => {
-//             res.status(201).json(created)
-//         })
-        
-//         .catch(error => {
-//             console.log(error)
-//             res.status(500).json({error: "There was an error while saving the comment to the database"})
-//         })
-//     } 
-//     })
+// .post() with ID comments 
+router.post("/:post_id/comments", (req, res) => {
+    const { text }  = req.body; 
+    const { post_id } = req.body; 
+    
+    if(!text) {
+        res.status(400).json({errorMessage: "Please provide title and contents for the post"})
+    } 
+        db
+        .insertComment({text, post_id})
+        .then(upToDate => {
+            if(upToDate) {
+                db.findCommentById(post_id)
+                .then(post => {
+                    res.status(200).json(post)
+                })
+                .catch(error => {
+                    console.log(error)
+                    res.status(500).json({error: "The post information could not be modified one"})
+            })
+        } else {
+            res.status(404),json({errorMessage: "The post with the specified ID does not exist"})
+        }
+    })
+    .catch(error => {
+        console.log(error)
+        res.status(500).json({error: "The post information could not be modified two"})
+    })
+})
+
 
 
 
