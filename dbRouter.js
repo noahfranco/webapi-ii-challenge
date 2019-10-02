@@ -45,7 +45,7 @@ router.post("/:id/comments", (req, res) => {
         })
     } 
     })
-    
+
 
 // .get() 
 router.get("/", (req, res) => {
@@ -62,11 +62,23 @@ router.get("/", (req, res) => {
 })
 
 // .get() ID 
-router.get("/api/posts/:id", (req, res) => {
+router.get("/:id", (req, res) => {
     const { id } = req.params; 
     if(!id) {
-        res.status(404).json({message: "The post with the "})
+        res.status(404).json({message: "The post with the specified ID does not exist"})
+    } else {
+        db
+        .find(id)
+        .then(withID => {
+            res.status(201).json(withID)
+        })
+        .catch(error => {
+            console.log(error)
+            res.status(500).json({error: "The post information could not be retrieved"})
+        })
     }
 })
+
+
 
 module.exports = router; 
